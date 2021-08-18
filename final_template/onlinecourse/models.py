@@ -100,7 +100,7 @@ class Enrollment(models.Model):
 class Question(models.Model):
     question_text = models.TextField(max_length=200, help_text="fuck")
     grade = models.IntegerField()
-    lesson_id = models.ForeignKey(Enrollment, on_delete=models.CASCADE)
+    lesson_id = models.ForeignKey(Course, on_delete=models.CASCADE)
     # Used to persist question content for a course
     # Has a One-To-Many (or Many-To-Many if you want to reuse questions) relationship with course
     # Has a grade point for each question
