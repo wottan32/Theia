@@ -98,9 +98,10 @@ class Enrollment(models.Model):
 # <HINT> Create a Question Model with:
 
 class Question(models.Model):
-    question_text = models.TextField(max_length=200, help_text="fuck")
+    question_text = models.TextField()
     grade = models.IntegerField()
-    lesson_id = models.ForeignKey(Course, on_delete=models.CASCADE)
+    lesson_id = models.ForeignKey(Lesson, on_delete=models.CASCADE)
+    course = models.ManyToManyField(Course)
     # Used to persist question content for a course
     # Has a One-To-Many (or Many-To-Many if you want to reuse questions) relationship with course
     # Has a grade point for each question
@@ -129,7 +130,7 @@ class Question(models.Model):
     # Other fields and methods you would like to design
 class Choice(models.Model):
     choice_text = models.CharField(max_length=200)
-    is_correct = models.IntegerField()
+    is_correct = models.BooleanField(default=False)
     question_id = models.IntegerField()
 
 
