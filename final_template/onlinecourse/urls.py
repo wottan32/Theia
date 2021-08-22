@@ -13,11 +13,12 @@ urlpatterns = [
     path('login/', views.login_request, name='login'),
     path('logout/', views.logout_request, name='logout'),
     # ex: /onlinecourse/5/
-    path('<int:pk>/', views.CourseDetailView.as_view(), name='course_details'),
+    path('<int:pk>/onlinecourse/', views.CourseDetailView.as_view(), name='onlinecourse'),
     # ex: /enroll/5/
     path('<int:course_id>/enroll/', views.enroll, name='enroll'),
 
     # <HINT> Create a route for submit view
+    path('submit/', views.submit, name='submit'),
 
     # <HINT> Create a route for show_exam_result view
 
