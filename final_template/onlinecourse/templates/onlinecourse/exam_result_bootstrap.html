@@ -49,7 +49,7 @@
         <a class="btn btn-link text-danger" href="{% url 'onlinecourse:course_details' course.id %}">Re-test</a>
         {% endif %}
         <div class="card-columns-vertical mt-1">
-        <h5 class="">Exam results {{ selected_id }}</h5>
+        <h5 class="">Exam results {{ selected.id }}</h5>
             <div>
                 {% for lesson in course.lesson_set.all %}
                     {% for question in lesson.question_set.all %}
