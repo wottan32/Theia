@@ -1,5 +1,6 @@
 import sys
 from django.utils.timezone import now
+
 try:
     from django.db import models
 except Exception:
@@ -98,16 +99,19 @@ class Enrollment(models.Model):
 # <HINT> Create a Question Model with:
 
 class Question(models.Model):
-    question_text = models.TextField()
-    grade = models.IntegerField()
-    lesson_id = models.ForeignKey(Lesson, on_delete=models.CASCADE)
-    course = models.ManyToManyField(Course)
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
+    question_text = models.CharField(max_length=200, default="question content")
+    grade = models.FloatField(default=7.0)
+
+    # course = models.ManyToManyField(Course)
+
+    # choice_text = models.ForeignKey(Choice, delattr(obj, name))
     # Used to persist question content for a course
     # Has a One-To-Many (or Many-To-Many if you want to reuse questions) relationship with course
     # Has a grade point for each question
     # Has question content
     # Other fields and methods you would like to design
-#class Question(models.Model):
+    # class Question(models.Model):
     # Foreign key to lesson
     # question text
     # question grade/mark
@@ -123,15 +127,21 @@ class Question(models.Model):
 
 
 #  <HINT> Create a Choice Model with:
-    # Used to persist choice content for a question
-    # One-To-Many (or Many-To-Many if you want to reuse choices) relationship with Question
-    # Choice content
-    # Indicate if this choice of the question is a correct one or not
-    # Other fields and methods you would like to design
+# Used to persist choice content for a question
+# One-To-Many (or Many-To-Many if you want to reuse choices) relationship with Question
+# Choice content
+# Indicate if this choice of the question is a correct one or not
+# Other fields and methods you would like to design
 class Choice(models.Model):
-    choice_text = models.CharField(max_length=200)
+    question_id = models.ForeignKey(Question, on_delete=models.CASCADE)
+    # question_text = models.ForeignKey(Question, on_delete=models.CASCADE)
+    # AllQuestions = Question.objects.all()
+    choice_text = models.CharField(max_length=200, default="text")
+    # choice_text = models.CharField(max_length=200)
     is_correct = models.BooleanField(default=False)
-    question_id = models.IntegerField()
+    # question_id = models.IntegerField()
+    # course = models.ManyToManyField(Course)
+    # question_text = models.ForeignKey(Question, default=1, on_delete=models.CASCADE)
 
 
 # <HINT> The submission model

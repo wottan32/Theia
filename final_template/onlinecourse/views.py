@@ -117,16 +117,12 @@ def enroll(request, course_id):
 def submit(request, course_id):
     course = get_object_or_404(Course, pk=course_id)
     user = request.user
+    enrollment = Enrollment.objects.get(user=user, course=course)
+    selected_choices = extract_answers(request)
+    submission = Submission.objects.create(enrollment=enrollment)
+    submission.chocies.set(selected_choices)
 
-    is_enrolled = check_if_enrolled(user, course)
-    if not is_enrolled and user.is_authenticated:
-        # Create an enrollment
-        Enrollment.objects.create(user=user, course=course, mode='honor')
-        course.total_enrollment += 1
-        course.save()
-
-    return HttpResponseRedirect(reverse(viewname='onlinecourse:course_details', args=(course.id,)))
-
+    return HttpResponseRedirect(reverse(viewname='onlinecourse:show_exam_result', args=(course.id, submission.id,)))
 
 # <HINT> A example method to collect the selected choices from the exam form from the request object
 def extract_answers(request):
@@ -148,17 +144,18 @@ def extract_answers(request):
 # def show_exam_result(request, course_id, submission_id):
 def show_exam_result(request, course_id, submission_id):
     context = {}
+    course = get_object_or_404(Course, pk=course_id)
+    submission = get_object_or_404(Submission, pk=submission_id)
+    points_earned = 0
     total = 0
-    course = course_id
-    submission = Submission.objects.get(id=submission_id)
-    choice_ids = submission.choices.all()
-    for choice in choice_ids:
-        if choice.is_correct == True:
-            total = total + choice.question.grade
+    print(submission)
+    for choice in submission.chocies.all():
+        if choice.is_correct > 0:
+            points_earned += choice.question_id.grade
+            total += choice.question_id.grade
+        else:
+            total += choice.question_id.grade
     context['course'] = course
-    context['selected_ids'] = choice_ids
-    context['grade'] = total
+    context['selected_id'] = submission.chocies.all()
+    context['grade'] = int(points_earned / total * 100)
     return render(request, 'onlinecourse/exam_result_bootstrap.html', context)
-
-# error message
-# 'Submission' object has no attribute 'choice_set'
